@@ -13,6 +13,7 @@
 #
 # sudo apt-get update
 # sudo apt-get install aapt openjdk-17-jdk zip aria2 bc -y
+apt-get install zip bc -y
 
 echo "****************************"
 echo "     HyperOS Rom Modify     "
@@ -32,7 +33,7 @@ echo "os_version=$os_version" >>$GITHUB_ENV
 
 function main(){
     romName=${1}
-    rootPath=${GITHUB_WORKSPACE} || $(pwd)
+    rootPath="${GITHUB_WORKSPACE:-$(pwd)}"
     sudo chmod -R 777 ${rootPath}/lib
     sudo chmod -R 777 ${rootPath}/bin
     export LD_LIBRARY_PATH=${rootPath}/lib
@@ -41,35 +42,39 @@ function main(){
 
     # print rootPath
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] rootPath: ${rootPath}"
-    # nếu không có work/payload.bin thì skip
-    if [ ! -f work/payload.bin ]; then
-        mkdir work`
 
-        if [ ! -f ${romName} ] ;then
-            # romLink=https://cdnorg.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-            romLink=https://bn.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-            # romLink=https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-            echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Downloading ${romName}"
-            aria2c -s 8 -x 8 $romLink
-        fi
+    # mkdir work
 
-        echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
-        export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
-        unzip -o $rootPath/$romName -d $rootPath/work >/dev/null 2>&1
+    # if [ ! -f ${romName} ] ;then
+    #     # romLink=https://cdnorg.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+    #     romLink=https://bn.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+    #     # romLink=https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+    #     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Downloading ${romName}"
+    #     aria2c -s 8 -x 8 $romLink
+    # fi
 
-        # Hiển thị các file vừa giải nén
-        for file in $(cat ${rootPath}/work) ; do
-            echo -e file: $file
+    # echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
+    # export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
+    # unzip -o $rootPath/$romName -d $rootPath/work >/dev/null 2>&1
 
-        # rm -f $romName
-    fi
+    # # Hiển thị các file vừa giải nén
+    # for file in $(cat ${rootPath}/work) ; do
+    #     echo -e file: $file
+    # done
+    # # rm -f $romName
     
     cd work
-    mkdir images
+    mkdir -p "${rootPath}/work/images"
     rm -rf META-INF apex_info.pb care_map.pb payload_properties.txt
 
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Dumping images from payload.bin"
-    ${rootPath}/bin/payload-dumper -o ${rootPath}/work/images payload.bin >/dev/null 2>&1
+
+    export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
+    unzip -o $rootPath/$romName -d $rootPath/work2
+
+    # $rootPath/bin/payload_extract -s -o "$rootPath"/work/images/ -i "$rootPath"/work/payload.bin -x -T0
+     ${rootPath}/bin/payload-dumper -o $rootPath/work/images $rootPath/work/payload.bin 
+
     # rm -rf payload.bin
 
     unpackErofsImg system
