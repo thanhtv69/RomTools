@@ -155,17 +155,26 @@ function makeSuperImg(){
     --partition odm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/odm.img) | bc):main_a \
     --image odm_a=odm.img \
     --partition odm_b:readonly:0:main_b \
-    --partition mi_ext_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/mi_ext.img) | bc):main_a \
+    --partition mi_ext_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/mi_ext.img) | bc):main_a \
     --image mi_ext_a=mi_ext.img \
     --partition mi_ext_b:readonly:0:main_b \
-    --partition system_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/system_dlkm.img) | bc):main_a \
+    --partition system_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/system_dlkm.img) | bc):main_a \
     --image system_dlkm_a=system_dlkm.img \
     --partition system_dlkm_b:readonly:0:main_b \
-    --partition vendor_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/vendor_dlkm.img) | bc):main_a \
+    --partition vendor_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/vendor_dlkm.img) | bc):main_a \
     --image vendor_dlkm_a=vendor_dlkm.img \
     --partition vendor_dlkm_b:readonly:0:main_b \
     --sparse \
     --output ${rootPath}/work/images/super.img
+
+    rm -rf ${rootPath}/work/system.img
+    rm -rf ${rootPath}/work/vendor.img
+    rm -rf ${rootPath}/work/product.img
+    rm -rf ${rootPath}/work/system_ext.img
+    rm -rf ${rootPath}/work/odm.img
+    rm -rf ${rootPath}/work/images/mi_ext.img
+    rm -rf ${rootPath}/work/images/system_dlkm.img
+    rm -rf ${rootPath}/work/images/vendor_dlkm.img
 }
 
 function removeVbmetaVerify(){
