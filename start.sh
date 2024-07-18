@@ -525,7 +525,7 @@ function removeFiles(){
 
 function replaceCust(){
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Replacing cust image"
-    cp -rf ${rootPath}/files/images/cust.img images/cust.img
+    cp -rf ${rootPath}/files/images/cust.img ${rootPath}/work/images/cust.img
 }
 
 function kernelsuPatch(){
