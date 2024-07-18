@@ -117,7 +117,7 @@ function main(){
 function unpackErofsImg(){
     mv images/${1}.img ${1}.img
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unpacking ${1} image"
-    ${rootPath}/bin/extract.erofs -i ${1}.img -o ${1} -x
+    ${rootPath}/bin/extract.erofs -s -i ${1}.img -o ${1} -x
     rm -rf ${1}.img
 }
 
