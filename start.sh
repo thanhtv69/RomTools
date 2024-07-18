@@ -11,7 +11,7 @@
 #
 # Note: Please change the SUPERKEY located at TODO
 #
-sudo apt-get install p7zip-full aapt openjdk-17 zip aria2 bc
+sudo apt-get install aapt openjdk-17 zip aria2 bc
 
 echo "****************************"
 echo "     HyperOS Rom Modify     "
