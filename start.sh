@@ -65,8 +65,8 @@ function main(){
 
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Dumping images from payload.bin"
 
-    # $rootPath/bin/payload_extract -s -o "$rootPath"/work/images/ -i "$rootPath"/work/payload.bin -x -T0
-    ${rootPath}/bin/payload-dumper -o $rootPath/work/images $rootPath/work/payload.bin 
+    $rootPath/bin/payload_extract -s -o "$rootPath"/work/images/ -i "$rootPath"/work/payload.bin -x -T0
+    # ${rootPath}/bin/payload-dumper -o $rootPath/work/images $rootPath/work/payload.bin 
 
     # rm -rf payload.bin
 
