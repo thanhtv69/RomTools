@@ -1,0 +1,45 @@
+name: Build ROM
+on:
+  workflow_dispatch:
+    inputs:
+      URL:
+        description: "Official zip Rom package download address"
+        required: true
+        default: 'miui_COROT_OS1.0.18.0.UMLCNXM_a086066b44_14.0.zip'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Maximize your build environment
+        uses: easimon/maximize-build-space@master
+        with:
+          swap-size-mb: 8192
+          root-reserve-mb: 4096
+          temp-reserve-mb: 4096
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+      - name: Check out warehouse files
+        uses: actions/checkout@main
+      - name:  Construct Rom
+        run:
+          sudo cd sudo "$GITHUB_WORKSPACE
+          sudo bash setup.sh
+          sudo bash "$GITHUB_WORKSPACE"/start.sh ${{ github.event.inputs.URL }} $GITHUB_ENV $GITHUB_WORKSPACE
+      - name: Upload ROM
+        run: |
+          User="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+          url2="$(curl -s https://api.gofile.io/getServer | jq -r .data.server)"
+          [ -z "$url2" ] && url2="store$(( $RANDOM % 8 + 1 ))"
+          Linkrom="$(curl --dns-servers '1.1.1.1' -L -N -H $User -F file=@$GITHUB_WORKSPACE/zip/"${{ env.rom_name }}" https://${url2}.gofile.io/uploadFile | jq -r .data.downloadPage)"
+          touch file.log
+          echo -e "OS Version: ${{ env.os_version }}\nSecurity Patch: ${{ env.security_patch }}\nBase Line: ${{ env.base_line }}\nLink rom: $Linkrom" | tee file.log
+      - name: Upload Github Release
+        uses: ncipollo/release-action@main
+        with:
+          name: ${{ env.os_version }}
+          tag: ${{ env.os_version }}
+          bodyFile: "${{ github.workspace }}/file.log"
+          allowUpdates: true
+          artifactErrorsFailBuild: true
