@@ -32,7 +32,7 @@ echo "os_version=$os_version" >>$GITHUB_ENV
 
 function main(){
     romName=${1}
-    rootPath=`pwd`
+    rootPath=${GITHUB_WORKSPACE}
     sudo chmod -R 777 ${rootPath}/lib
     sudo chmod -R 777 ${rootPath}/bin
     export LD_LIBRARY_PATH=${rootPath}/lib
@@ -55,7 +55,7 @@ function main(){
 
         echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
         export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
-        unzip -o $romName -d work >/dev/null 2>&1
+        unzip -o $romName -d $rootPath/work >/dev/null 2>&1
         # rm -f $romName
     fi
     cd work
