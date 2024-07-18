@@ -117,14 +117,14 @@ function main(){
 function unpackErofsImg(){
     mv images/${1}.img ${1}.img
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unpacking ${1} image"
-    ${rootPath}/bin/extract.erofs -s -i ${1}.img -o ${1} -x
+    ${rootPath}/bin/extract.erofs -s -i ${1}.img -x
     rm -rf ${1}.img
 }
 
 function repackErofsImg(){
     name=${1}
-    fileContexts="${rootPath}/work/${name}/config/${name}_file_contexts"
-    fsConfig="${rootPath}/work/${name}/config/${name}_fs_config"
+    fileContexts="${rootPath}/work/config/${name}_file_contexts"
+    fsConfig="${rootPath}/work/config/${name}_fs_config"
     outImg="${rootPath}/work/${name}.img"
     inFiles="${rootPath}/work/${name}/${name}"
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Repacking ${1} image"
