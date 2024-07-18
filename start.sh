@@ -23,6 +23,9 @@ GITHUB_WORKSPACE="$3" # Workspace directory
 cd $GITHUB_WORKSPACE
 os_version=$(echo ${FileName} | cut -d"/" -f4)   
 echo "os_version=$os_version" >>$GITHUB_ENV
+# sudo apt-get install python3 aria2
+sudo chmod -R 777 "$GITHUB_WORKSPACE"/bin
+sudo chmod -R 777 "$GITHUB_WORKSPACE"/lib
 
 N='\033[0m'
 R='\033[1;31m'
