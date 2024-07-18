@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@main
       - name:  Construct Rom
         run:
-          sudo cd sudo "$GITHUB_WORKSPACE
+          sudo cd $GITHUB_WORKSPACE
           sudo bash setup.sh
           sudo bash "$GITHUB_WORKSPACE"/start.sh ${{ github.event.inputs.URL }} $GITHUB_ENV $GITHUB_WORKSPACE
       - name: Upload ROM
