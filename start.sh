@@ -164,6 +164,9 @@ function makeSuperImg(){
     --partition vendor_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/vendor_dlkm.img) | bc):main_a \
     --image vendor_dlkm_a=vendor_dlkm.img \
     --partition vendor_dlkm_b:readonly:0:main_b \
+    --partition odm_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/odm_dlkm.img) | bc):main_a \
+    --image odm_dlkm_a=odm_dlkm.img \
+    --partition odm_dlkm_b:readonly:0:main_b \
     --sparse \
     --output ${rootPath}/work/images/super.img
 
@@ -175,6 +178,7 @@ function makeSuperImg(){
     rm -rf ${rootPath}/work/images/mi_ext.img
     rm -rf ${rootPath}/work/images/system_dlkm.img
     rm -rf ${rootPath}/work/images/vendor_dlkm.img
+    rm -rf ${rootPath}/work/images/odm_dlkm.img
 }
 
 function removeVbmetaVerify(){
