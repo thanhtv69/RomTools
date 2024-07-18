@@ -31,9 +31,10 @@ GITHUB_WORKSPACE="$3"
 os_version=$(echo ${URL} | cut -d"/" -f4)  
 echo "os_version=$os_version" >>$GITHUB_ENV
 
+rootPath="${GITHUB_WORKSPACE:-$(pwd)}"
+
 function main(){
     romName=${1}
-    rootPath="${GITHUB_WORKSPACE:-$(pwd)}"
     sudo chmod -R 777 ${rootPath}/lib
     sudo chmod -R 777 ${rootPath}/bin
     export LD_LIBRARY_PATH=${rootPath}/lib
@@ -57,10 +58,6 @@ function main(){
     export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
     unzip -o $rootPath/$romName -d $rootPath/work
 
-    # Hiển thị các file vừa giải nén
-    for file in $(cat ${rootPath}/work) ; do
-        echo -e file: $file
-    done
     # rm -f $romName
     
     cd work
@@ -137,6 +134,7 @@ function repackErofsImg(){
 
 function makeSuperImg(){
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Repacking Super image"
+    cd ${rootPath}/work/images
     # 9126805504
     ${rootPath}/bin/lpmake --metadata-size 65536 \
     --super-name super \
@@ -168,7 +166,7 @@ function makeSuperImg(){
     --image vendor_dlkm_a=vendor_dlkm.img \
     --partition vendor_dlkm_b:readonly:0:main_b \
     --sparse \
-    --output images/super.img >/dev/null 2>&1
+    --output ${rootPath}/work/images/super.img
 }
 
 function removeVbmetaVerify(){
