@@ -31,11 +31,11 @@ os_version=$(echo ${URL} | cut -d"/" -f4)
 echo "os_version=$os_version" >>$GITHUB_ENV
 
 rootPath="${GITHUB_WORKSPACE:-$(pwd)}"
+sudo chmod -R 777 ${rootPath}/lib
+sudo chmod -R 777 ${rootPath}/bin
 
 function main(){
     romName=${1}
-    sudo chmod -R 777 ${rootPath}/lib
-    sudo chmod -R 777 ${rootPath}/bin
     export LD_LIBRARY_PATH=${rootPath}/lib
 
     cd $rootPath
@@ -115,7 +115,8 @@ function main(){
 }
 
 function unpackErofsImg(){
-    mv images/${1}.img ${1}.img
+    cd ${rootPath}/work
+    mv ${rootPath}/work/images/${1}.img ${1}.img
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unpacking ${1} image"
     ${rootPath}/bin/extract.erofs -s -i ${1}.img -x
     rm -rf ${1}.img
@@ -126,7 +127,7 @@ function repackErofsImg(){
     fileContexts="${rootPath}/work/config/${name}_file_contexts"
     fsConfig="${rootPath}/work/config/${name}_fs_config"
     outImg="${rootPath}/work/${name}.img"
-    inFiles="${rootPath}/work/${name}/${name}"
+    inFiles="${rootPath}/${name}"
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Repacking ${1} image"
     ${rootPath}/bin/mkfs.erofs --quiet -zlz4hc,9 -T1230768000 --mount-point=/$name --fs-config-file=$fsConfig --file-contexts=$fileContexts $outImg $inFiles
 }
