@@ -98,11 +98,11 @@ function main(){
     # mv images/system_dlkm.img system_dlkm.img
     # mv images/vendor_dlkm.img vendor_dlkm.img
 
-    makeSuperImg
     removeVbmetaVerify
     replaceCust
     # kernelsuPatch
     # apatchPatch <SUPERKEY> # TODO
+    makeSuperImg
 
     rm -rf system vendor product system_ext system.img vendor.img product.img system_ext.img odm.img mi_ext.img system_dlkm.img vendor_dlkm.img init_boot.img boot.img
     cp -rf ${rootPath}/files/flash.bat ${rootPath}/work/flash.bat
@@ -128,7 +128,7 @@ function repackErofsImg(){
     outImg="${rootPath}/work/${name}.img"
     inFiles="${rootPath}/work/${name}/${name}"
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Repacking ${1} image"
-    ${rootPath}/bin/mkfs.erofs -zlz4hc -T1640966400 --mount-point=/$name --fs-config-file=$fsConfig --file-contexts=$fileContexts $outImg $inFiles
+    ${rootPath}/bin/mkfs.erofs --quiet -zlz4hc,9 -T1230768000 --mount-point=/$name --fs-config-file=$fsConfig --file-contexts=$fileContexts $outImg $inFiles
 }
 
 function makeSuperImg(){
