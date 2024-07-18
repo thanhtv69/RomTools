@@ -16,49 +16,49 @@ echo "****************************"
 echo "     HyperOS Rom Modify     "
 echo "****************************"
 
-FileName="$1"              # Ported package download address
-GITHUB_ENV="$2"       # Output environment variable
-GITHUB_WORKSPACE="$3" # Workspace directory
-
-cd $GITHUB_WORKSPACE
-os_version=$(echo ${FileName} | cut -d"/" -f4)   
-echo "os_version=$os_version" >>$GITHUB_ENV
-# sudo apt-get install python3 aria2
-sudo chmod -R 777 "$GITHUB_WORKSPACE"/bin
-sudo chmod -R 777 "$GITHUB_WORKSPACE"/lib
-
 N='\033[0m'
 R='\033[1;31m'
 G='\033[1;32m'
 B='\033[1;34m'
 
+GITHUB_ENV="$2"       # Output environment variable
+GITHUB_WORKSPACE="$3" # Workspace directory
+
 function main(){
-    echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Start"
     romName=${1}
     rootPath=`pwd`
+    sudo chmod -R 777 ${rootPath}/lib
+    sudo chmod -R 777 ${rootPath}/bin
     export LD_LIBRARY_PATH=${rootPath}/lib
-    mkdir work
 
-    if [ ! -f ${romName} ] ;then
-        # romLink=https://cdnorg.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-        romLink=https://bn.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-        # romLink=https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-        echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Downloading ${romName}"
-        aria2c -s 8 -x 8 $romLink
+    # print rootPath
+    echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] rootPath: ${rootPath}"
+    # nếu không có work/payload.bin thì skip
+    if [ ! -f work/payload.bin ]; then
+        mkdir work
+
+        if [ ! -f ${romName} ] ;then
+            # romLink=https://cdnorg.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+            romLink=https://bn.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+            # romLink=https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+            echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Downloading ${romName}"
+            aria2c -s 8 -x 8 $romLink
+        fi
+
+        echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
+        # export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
+        # unzip -o $romName -d work >/dev/null 2>&1
+         ${rootPath}/bin/7zzs -x $romName -o${rootPath}/work  payload.bin >/dev/null
+        # rm -f $romName
     fi
-
-    echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
-    export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
-    unzip -o $romName -d work >/dev/null 2>&1
-    # rm -f $romName
-
     cd work
+
     mkdir images
     rm -rf META-INF apex_info.pb care_map.pb payload_properties.txt
 
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Dumping images from payload.bin"
     ${rootPath}/bin/payload-dumper -o ${rootPath}/work/images payload.bin >/dev/null 2>&1
-    rm -rf payload.bin
+    # rm -rf payload.bin
 
     unpackErofsImg system
     unpackErofsImg vendor
@@ -91,16 +91,17 @@ function main(){
     makeSuperImg
     removeVbmetaVerify
     replaceCust
-    kernelsuPatch
+    # kernelsuPatch
     # apatchPatch <SUPERKEY> # TODO
 
     rm -rf system vendor product system_ext system.img vendor.img product.img system_ext.img odm.img mi_ext.img system_dlkm.img vendor_dlkm.img init_boot.img boot.img
     cp -rf ${rootPath}/files/flash.bat ${rootPath}/work/flash.bat
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Compressing all images"
     zip -q -r rom.zip images flash.bat
-    name=miui_TV_$(echo "${romName}" | awk -F "_" '{print $3}')_$(((md5sum rom.zip) | awk '{print $1}') | cut -c -10)_14.0.zip
+    name=miui_chuest_HOUJI_$(echo "${romName}" | awk -F "_" '{print $3}')_$(((md5sum rom.zip) | awk '{print $1}') | cut -c -10)_14.0.zip
     mv rom.zip ${name}
     echo "rom_name=$name" >>$GITHUB_ENV
+    echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Done"
 }
 
 function unpackErofsImg(){
@@ -125,9 +126,9 @@ function makeSuperImg(){
     # 9126805504
     ${rootPath}/bin/lpmake --metadata-size 65536 \
     --super-name super \
-    --device super:8321499136 \
-    --group main_a:8321499136 \
-    --group main_b:8321499136 \
+    --device super:9126805504 \
+    --group main_a:9126805504 \
+    --group main_b:9126805504 \
     --metadata-slots 3 --virtual-ab \
     --partition system_a:readonly:$(echo $(stat -c "%s" system.img) | bc):main_a \
     --image system_a=system.img \
@@ -543,4 +544,4 @@ function apatchPatch(){
     mv new-boot.img images/boot.img
 }
 
-main $FileName
+main ${1}
