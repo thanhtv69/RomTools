@@ -52,7 +52,7 @@ function main(){
         echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
         # export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
         # unzip -o $romName -d work >/dev/null 2>&1
-         ${rootPath}/bin/7zzs -x $romName -o${rootPath}/work  payload.bin >/dev/null
+         ${rootPath}/bin/7zzs x ${rootPath}/$romName -o${rootPath}/work  payload.bin >/dev/null
         # rm -f $romName
     fi
     cd work
