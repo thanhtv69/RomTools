@@ -21,8 +21,12 @@ R='\033[1;31m'
 G='\033[1;32m'
 B='\033[1;34m'
 
+URL="$1"   
 GITHUB_ENV="$2"       # Output environment variable
 GITHUB_WORKSPACE="$3" # Workspace directory
+
+os_version=$(echo ${URL} | cut -d"/" -f4)  
+echo "os_version=$os_version" >>$GITHUB_ENV
 
 function main(){
     romName=${1}
