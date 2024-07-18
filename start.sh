@@ -13,7 +13,7 @@
 #
 # sudo apt-get update
 # sudo apt-get install aapt openjdk-17-jdk zip aria2 bc -y
-apt-get install zip bc -y
+sudo apt-get install zip bc -y
 
 echo "****************************"
 echo "     HyperOS Rom Modify     "
