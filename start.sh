@@ -43,19 +43,19 @@ function main(){
     # print rootPath
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] rootPath: ${rootPath}"
 
-    # mkdir work
+    mkdir work
 
-    # if [ ! -f ${romName} ] ;then
-    #     # romLink=https://cdnorg.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-    #     romLink=https://bn.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-    #     # romLink=https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
-    #     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Downloading ${romName}"
-    #     aria2c -s 8 -x 8 $romLink
-    # fi
+    if [ ! -f ${romName} ] ;then
+        # romLink=https://cdnorg.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+        romLink=https://bn.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+        # romLink=https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
+        echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Downloading ${romName}"
+        aria2c -s 8 -x 8 $romLink
+    fi
 
-    # echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
-    # export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
-    # unzip -o $rootPath/$romName -d $rootPath/work >/dev/null 2>&1
+    echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
+    export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
+    unzip -o $rootPath/$romName -d $rootPath/work
 
     # # Hiển thị các file vừa giải nén
     # for file in $(cat ${rootPath}/work) ; do
@@ -68,9 +68,6 @@ function main(){
     rm -rf META-INF apex_info.pb care_map.pb payload_properties.txt
 
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Dumping images from payload.bin"
-
-    export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
-    unzip -o $rootPath/$romName -d $rootPath/work2
 
     # $rootPath/bin/payload_extract -s -o "$rootPath"/work/images/ -i "$rootPath"/work/payload.bin -x -T0
      ${rootPath}/bin/payload-dumper -o $rootPath/work/images $rootPath/work/payload.bin 
