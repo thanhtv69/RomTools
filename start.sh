@@ -75,18 +75,18 @@ function main(){
     unpackErofsImg product
     unpackErofsImg system_ext
 
-    # removeAVB
-    # removeSignVerify
-    # replaceApks
-    # removeFiles
-    # themeManagerPatch
-    # preventThemeRecovery
-    # personalAssistantPatch
-    # mmsVerificationCodeAutoCopy
-    # powerKeeperPatch
-    # settingsPatch
-    # miuiSystemUIPatch
-    # modify
+    removeAVB
+    removeSignVerify
+    replaceApks
+    removeFiles
+    themeManagerPatch
+    preventThemeRecovery
+    personalAssistantPatch
+    mmsVerificationCodeAutoCopy
+    powerKeeperPatch
+    settingsPatch
+    miuiSystemUIPatch
+    modify
 
     repackErofsImg system
     repackErofsImg vendor
