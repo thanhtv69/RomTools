@@ -22,6 +22,7 @@ G='\033[1;32m'
 B='\033[1;34m'
 
 function main(){
+    echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Start"
     romName=${1}
     rootPath=`pwd`
     export LD_LIBRARY_PATH=${rootPath}/lib
@@ -53,18 +54,18 @@ function main(){
     unpackErofsImg product
     unpackErofsImg system_ext
 
-    removeAVB
-    removeSignVerify
-    replaceApks
-    removeFiles
-    themeManagerPatch
-    preventThemeRecovery
-    personalAssistantPatch
-    mmsVerificationCodeAutoCopy
-    powerKeeperPatch
-    settingsPatch
-    miuiSystemUIPatch
-    modify
+    # removeAVB
+    # removeSignVerify
+    # replaceApks
+    # removeFiles
+    # themeManagerPatch
+    # preventThemeRecovery
+    # personalAssistantPatch
+    # mmsVerificationCodeAutoCopy
+    # powerKeeperPatch
+    # settingsPatch
+    # miuiSystemUIPatch
+    # modify
 
     repackErofsImg system
     repackErofsImg vendor
