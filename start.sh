@@ -16,6 +16,12 @@ echo "****************************"
 echo "     HyperOS Rom Modify     "
 echo "****************************"
 
+FileName="$1"              # Ported package download address
+GITHUB_ENV="$2"       # Output environment variable
+GITHUB_WORKSPACE="$3" # Workspace directory
+
+
+
 N='\033[0m'
 R='\033[1;31m'
 G='\033[1;32m'
@@ -86,9 +92,10 @@ function main(){
     rm -rf system vendor product system_ext system.img vendor.img product.img system_ext.img odm.img mi_ext.img system_dlkm.img vendor_dlkm.img init_boot.img boot.img
     cp -rf ${rootPath}/files/flash.bat ${rootPath}/work/flash.bat
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Compressing all images"
-    # zip -q -r rom.zip images flash.bat
-    # name=miui_chuest_HOUJI_$(echo "${romName}" | awk -F "_" '{print $3}')_$(((md5sum rom.zip) | awk '{print $1}') | cut -c -10)_14.0
-    # mv rom.zip ${name}.zip
+    zip -q -r rom.zip images flash.bat
+    name=miui_TV_$(echo "${romName}" | awk -F "_" '{print $3}')_$(((md5sum rom.zip) | awk '{print $1}') | cut -c -10)_14.0.zip
+    mv rom.zip ${name}
+    echo "rom_name=$name" >>$GITHUB_ENV
 }
 
 function unpackErofsImg(){
@@ -531,4 +538,4 @@ function apatchPatch(){
     mv new-boot.img images/boot.img
 }
 
-main ${1}
+main $FileName
