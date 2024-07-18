@@ -93,10 +93,10 @@ function main(){
     repackErofsImg product
     repackErofsImg system_ext
 
-    mv images/odm.img odm.img
-    mv images/mi_ext.img mi_ext.img
-    mv images/system_dlkm.img system_dlkm.img
-    mv images/vendor_dlkm.img vendor_dlkm.img
+    # mv images/odm.img odm.img
+    # mv images/mi_ext.img mi_ext.img
+    # mv images/system_dlkm.img system_dlkm.img
+    # mv images/vendor_dlkm.img vendor_dlkm.img
 
     makeSuperImg
     removeVbmetaVerify
@@ -108,7 +108,7 @@ function main(){
     cp -rf ${rootPath}/files/flash.bat ${rootPath}/work/flash.bat
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Compressing all images"
     zip -q -r rom.zip images flash.bat
-    name=miui_chuest_HOUJI_$(echo "${romName}" | awk -F "_" '{print $3}')_$(((md5sum rom.zip) | awk '{print $1}') | cut -c -10)_14.0.zip
+    name=TV_Corot_$(echo "${romName}" | awk -F "_" '{print $3}')_$(((md5sum rom.zip) | awk '{print $1}') | cut -c -10)_14.0.zip
     mv rom.zip ${name}
     echo "rom_name=$name" >>$GITHUB_ENV
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Done"
@@ -117,7 +117,7 @@ function main(){
 function unpackErofsImg(){
     mv images/${1}.img ${1}.img
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unpacking ${1} image"
-    ${rootPath}/bin/extract.erofs -i ${1}.img -o ${1} -x >/dev/null 2>&1
+    ${rootPath}/bin/extract.erofs -i ${1}.img -o ${1} -x
     rm -rf ${1}.img
 }
 
@@ -128,7 +128,7 @@ function repackErofsImg(){
     outImg="${rootPath}/work/${name}.img"
     inFiles="${rootPath}/work/${name}/${name}"
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Repacking ${1} image"
-    ${rootPath}/bin/mkfs.erofs -zlz4hc -T1640966400 --mount-point=/$name --fs-config-file=$fsConfig --file-contexts=$fileContexts $outImg $inFiles >/dev/null 2>&1
+    ${rootPath}/bin/mkfs.erofs -zlz4hc -T1640966400 --mount-point=/$name --fs-config-file=$fsConfig --file-contexts=$fileContexts $outImg $inFiles
 }
 
 function makeSuperImg(){
@@ -141,27 +141,27 @@ function makeSuperImg(){
     --group main_a:9126805504 \
     --group main_b:9126805504 \
     --metadata-slots 3 --virtual-ab \
-    --partition system_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/system.img) | bc):main_a \
+    --partition system_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/system.img) | bc):main_a \
     --image system_a=system.img \
     --partition system_b:readonly:0:main_b \
-    --partition vendor_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/vendor.img) | bc):main_a \
+    --partition vendor_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/vendor.img) | bc):main_a \
     --image vendor_a=vendor.img \
     --partition vendor_b:readonly:0:main_b \
-    --partition product_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/product.img) | bc):main_a \
+    --partition product_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/product.img) | bc):main_a \
     --image product_a=product.img \
     --partition product_b:readonly:0:main_b \
-    --partition system_ext_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/system_ext.img) | bc):main_a \
+    --partition system_ext_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/system_ext.img) | bc):main_a \
     --image system_ext_a=system_ext.img --partition system_ext_b:readonly:0:main_b \
-    --partition odm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/odm.img) | bc):main_a \
+    --partition odm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/odm.img) | bc):main_a \
     --image odm_a=odm.img \
     --partition odm_b:readonly:0:main_b \
-    --partition mi_ext_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/mi_ext.img) | bc):main_a \
+    --partition mi_ext_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/mi_ext.img) | bc):main_a \
     --image mi_ext_a=mi_ext.img \
     --partition mi_ext_b:readonly:0:main_b \
-    --partition system_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/system_dlkm.img) | bc):main_a \
+    --partition system_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/system_dlkm.img) | bc):main_a \
     --image system_dlkm_a=system_dlkm.img \
     --partition system_dlkm_b:readonly:0:main_b \
-    --partition vendor_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/images/vendor_dlkm.img) | bc):main_a \
+    --partition vendor_dlkm_a:readonly:$(echo $(stat -c "%s" ${rootPath}/work/vendor_dlkm.img) | bc):main_a \
     --image vendor_dlkm_a=vendor_dlkm.img \
     --partition vendor_dlkm_b:readonly:0:main_b \
     --sparse \
