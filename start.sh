@@ -11,6 +11,7 @@
 #
 # Note: Please change the SUPERKEY located at TODO
 #
+sudo apt-get install p7zip-full aapt openjdk-17 zip aria2 bc
 
 echo "****************************"
 echo "     HyperOS Rom Modify     "
@@ -50,9 +51,8 @@ function main(){
         fi
 
         echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
-        # export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
-        # unzip -o $romName -d work >/dev/null 2>&1
-         ${rootPath}/bin/7zzs x ${rootPath}/$romName -o${rootPath}/work  payload.bin >/dev/null
+        export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
+        unzip -o $romName -d work >/dev/null 2>&1
         # rm -f $romName
     fi
     cd work
