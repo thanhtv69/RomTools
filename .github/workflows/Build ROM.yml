@@ -24,7 +24,6 @@ jobs:
         uses: actions/checkout@main
       - name:  Construct Rom
         run:
-          sudo cd $GITHUB_WORKSPACE
           sudo bash setup.sh
           sudo bash "$GITHUB_WORKSPACE"/start.sh ${{ github.event.inputs.URL }} $GITHUB_ENV $GITHUB_WORKSPACE
       - name: Upload ROM
@@ -34,7 +33,7 @@ jobs:
           [ -z "$url2" ] && url2="store$(( $RANDOM % 8 + 1 ))"
           Linkrom="$(curl --dns-servers '1.1.1.1' -L -N -H $User -F file=@$GITHUB_WORKSPACE/zip/"${{ env.rom_name }}" https://${url2}.gofile.io/uploadFile | jq -r .data.downloadPage)"
           touch file.log
-          echo -e "OS Version: ${{ env.os_version }}\nSecurity Patch: ${{ env.security_patch }}\nBase Line: ${{ env.base_line }}\nLink rom: $Linkrom" | tee file.log
+          echo -e "OS Version: ${{ env.os_version }}\nLink rom: $Linkrom" | tee file.log
       - name: Upload Github Release
         uses: ncipollo/release-action@main
         with:

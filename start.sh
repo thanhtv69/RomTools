@@ -20,7 +20,9 @@ FileName="$1"              # Ported package download address
 GITHUB_ENV="$2"       # Output environment variable
 GITHUB_WORKSPACE="$3" # Workspace directory
 
-
+cd $GITHUB_WORKSPACE
+os_version=$(echo ${FileName} | cut -d"/" -f4)   
+echo "os_version=$os_version" >>$GITHUB_ENV
 
 N='\033[0m'
 R='\033[1;31m'
