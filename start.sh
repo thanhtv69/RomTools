@@ -37,11 +37,13 @@ function main(){
     sudo chmod -R 777 ${rootPath}/bin
     export LD_LIBRARY_PATH=${rootPath}/lib
 
+    cd $rootPath
+
     # print rootPath
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] rootPath: ${rootPath}"
     # nếu không có work/payload.bin thì skip
     if [ ! -f work/payload.bin ]; then
-        mkdir $rootPath/work
+        mkdir work
 
         if [ ! -f ${romName} ] ;then
             # romLink=https://cdnorg.d.miui.com/$(echo "${romName}" | awk -F "_" '{print $3}')/${romName}
@@ -53,10 +55,10 @@ function main(){
 
         echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Unzipping ${romName}"
         export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
-        unzip -o $rootPath/$romName -d $rootPath/work >/dev/null 2>&1
+        unzip -o $romName -d work >/dev/null 2>&1
         # rm -f $romName
     fi
-    cd $rootPath/work
+    cd work
 
     mkdir images
     rm -rf META-INF apex_info.pb care_map.pb payload_properties.txt
