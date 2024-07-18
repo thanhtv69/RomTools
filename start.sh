@@ -57,11 +57,11 @@ function main(){
     export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE
     unzip -o $rootPath/$romName -d $rootPath/work
 
-    # # Hiển thị các file vừa giải nén
-    # for file in $(cat ${rootPath}/work) ; do
-    #     echo -e file: $file
-    # done
-    # # rm -f $romName
+    # Hiển thị các file vừa giải nén
+    for file in $(cat ${rootPath}/work) ; do
+        echo -e file: $file
+    done
+    # rm -f $romName
     
     cd work
     mkdir -p "${rootPath}/work/images"
@@ -69,8 +69,8 @@ function main(){
 
     echo -e "$(date "+%m/%d %H:%M:%S") [${G}NOTICE${N}] Dumping images from payload.bin"
 
-    # $rootPath/bin/payload_extract -s -o "$rootPath"/work/images/ -i "$rootPath"/work/payload.bin -x -T0
-     ${rootPath}/bin/payload-dumper -o $rootPath/work/images $rootPath/work/payload.bin 
+    $rootPath/bin/payload_extract -s -o "$rootPath"/work/images/ -i "$rootPath"/work/payload.bin -x -T0
+    #  ${rootPath}/bin/payload-dumper -o $rootPath/work/images $rootPath/work/payload.bin 
 
     # rm -rf payload.bin
 
